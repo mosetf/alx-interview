@@ -3,42 +3,27 @@
     Generate Pascal's triangle up to the specified number of rows.
 """
 
-
 def pascal_triangle(n):
+    """create a list of lists of integers
+    parameters:
+        n [int]:
+            the number of rows
+    return:
+        [list of lists of ints]:
+            representing the pascal's triangle
     """
-    Generate Pascal's triangle up to the specified number of rows.
-
-    Args:
-    - n (int): The number of rows to generate in Pascal's triangle.
-
-    Returns:
-    - list: A list of lists representing Pascal's triangle.
-
-    Note:
-    Returns an empty list if n <= 0. Assumes n will always be an integer.
-    """
-
-    # Check if n is less than or equal to 0
+    if type(n) is not int:
+        raise TypeError("n must be an integer")
+    matrix = []
     if n <= 0:
-        # If true, return an empty list
-        return []
-
-    # Initialize an empty list to store the rows of Pascal's triangle
-    triangle = []
-
-    # Iterate through each row from 0 to n-1
+        return matrix
     for i in range(n):
-        # Initialize a new row with all elements set to 1
-        row = [1] * (i + 1)
-
-        # Check if the row index is greater than 1 (to avoid IndexError)
-        if i > 1:
-            # Update elements in the row based on the values from the previous row
-            for j in range(1, i):
-                row[j] = triangle[i - 1][j - 1] + triangle[i - 1][j]
-
-        # Append the current row to the triangle list
-        triangle.append(row)
-
-    # Return the resulting Pascal's triangle
-    return triangle
+        arr = []
+        for j in range(i+1):
+            if j == 0:
+                arr.append(1)
+            elif j == i:
+                arr.append(1)
+            else:
+                arr.append(matrix[i-1][j-1] + matrix[i-1][j])
+        matrix.append(arr) 
