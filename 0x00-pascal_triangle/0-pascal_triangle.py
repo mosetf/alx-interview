@@ -1,7 +1,7 @@
 #!/usr/bin/python3
-    """
+"""
     Generate Pascal's triangle up to the specified number of rows.
-    """
+"""
 
 
 def pascal_triangle(n):
