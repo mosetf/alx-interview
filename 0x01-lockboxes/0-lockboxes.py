@@ -1,4 +1,8 @@
 #!/usr/bin/python3
+"""
+function that checks if you can unlock all
+the boxes based on their indices
+"""
 def canUnlockAll(boxes):
     """
     Check if all boxes can be unlocked starting from the first box.
