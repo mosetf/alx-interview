@@ -18,8 +18,8 @@ def canUnlockAll(boxes):
     """
     x = len(boxes)
 
-#    if x == 0:i
-#        return False  # If there are no boxes, retur false
+    if x == 0 and type(boxes) is not list:
+       return False  # If there are no boxes, retur false
 
     visited_index = [False] * x  # Initialize a list to track visited indices
     stack = [0]  # Start with the first box (index 0)
