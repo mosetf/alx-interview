@@ -14,12 +14,12 @@ def canUnlockAll(boxes):
                       and contains indexes of other boxes that can be unlocked.
 
     Returns:
-        bool: True if all boxes can be unlocked, False otherwise.
+        bool: True if all boxes can be unlocked otherwise false
     """
     x = len(boxes)
 
-    if x == 0:
-        return False  # If there are no boxes, retur false
+#    if x == 0:i
+#        return False  # If there are no boxes, retur false
 
     visited_index = [False] * x  # Initialize a list to track visited indices
     stack = [0]  # Start with the first box (index 0)
