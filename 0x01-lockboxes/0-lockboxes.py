@@ -11,27 +11,34 @@ def canUnlockAll(boxes):
 
     Args:
         boxes (list): A list of lists where each inner list represents a box
-                      and contains indexes of other boxes that can be unlocked.
+                      and contains indices of other boxes that can be unlocked.
 
     Returns:
-        bool: True if all boxes can be unlocked otherwise false
+        bool: True if all boxes can be unlocked, False otherwise.
     """
-    x = len(boxes)
+    if boxes:
+        numOfBoxes = len(boxes)
+        setOfKeys = {0}
+        setOfKeys.update(boxes[0])
+        visitedBoxes = {0}
 
-    if x == 0:
-        return False  # If there are no boxes, retur false
+        while True:
+            newBoxVisited = False
+            keys = setOfKeys.copy()
 
-    visited_index = [False] * x  # Initialize a list to track visited indices
-    stack = [0]  # Start with the first box (index 0)
+            for key in keys:
+                if key not in visitedBoxes and key < numOfBoxes:
+                    setOfKeys.update(boxes[key])
+                    visitedBoxes.add(key)
+                    newBoxVisited = True
 
-    while stack:
-        current_index = stack.pop()
-        visited_index[current_index] = True
+            if not newBoxVisited:
+                break
 
-        current_array = boxes[current_index]
+        for n in range(numOfBoxes):
+            if n not in setOfKeys:
+                return False
 
-        for value in current_array:
-            if 0 <= value < x and not visited_index[value]:
-                stack.append(value)
+        return True
 
-    return all(visited_index)
+    return False
