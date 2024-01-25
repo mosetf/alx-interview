@@ -31,6 +31,7 @@ for i in range(10000):
     ))
     sys.stdout.flush()
 ```
+```console
 
 stan@ubuntu:~/0x03-log_parsing$ ./0-generator.py | ./0-stats.py 
 File size: 5213
@@ -76,4 +77,5 @@ KeyboardInterrupt
     sleep(random.random())
 KeyboardInterrupt
 stan@ubuntu:~/0x03-log_parsing$ 
+```
 ```
