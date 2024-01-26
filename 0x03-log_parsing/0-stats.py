@@ -1,42 +1,60 @@
 #!/usr/bin/python3
-"""
-Module that performs log parsing from stdin
-"""
-
-import re
-import sys
-counter = 0
-file_size = 0
-statusC_counter = {200: 0, 301: 0, 400: 0,
-                   401: 0, 403: 0, 404: 0, 405: 0, 500: 0}
+'''
+Module Docs
+'''
+from sys import stdin
 
 
-def printCodes(dict, file_s):
-    """Prints the status code and the number of times they appear"""
-    print("File size: {}".format(file_s))
-    for key in sorted(dict.keys()):
-        if statusC_counter[key] != 0:
-            print("{}: {}".format(key, dict[key]))
+def print_summary(total_file_size, status_counts):
+    """
+    Print the total file size and counts of HTTP status codes.
+
+    :param total_file_size: Total file size accumulated so far.
+    :param status_counts: Dictionary containing counts of different HTTP status
+    codes.
+    """
+    print("File size: {:d}".format(total_file_size))
+    for code, count in sorted(status_counts.items()):
+        if count != 0:
+            print("{}: {}".format(code, count))
 
 
-if __name__ == "__main__":
-    try:
-        for line in sys.stdin:
-            split_string = re.split('- |"|"| " " ', str(line))
-            statusC_and_file_s = split_string[-1]
-            if counter != 0 and counter % 10 == 0:
-                printCodes(statusC_counter, file_size)
-            counter = counter + 1
-            try:
-                statusC = int(statusC_and_file_s.split()[0])
-                f_size = int(statusC_and_file_s.split()[1])
-                # print("Status Code {} size {}".format(statusC, f_size))
-                if statusC in statusC_counter:
-                    statusC_counter[statusC] += 1
-                file_size = file_size + f_size
-            except:
-                pass
-        printCodes(statusC_counter, file_size)
-    except KeyboardInterrupt:
-        printCodes(statusC_counter, file_size)
-        raise
+# Dictionary to store counts of different HTTP status codes
+http_status_counts = {'200': 0, '301': 0, '400': 0, '401': 0,
+                      '403': 0, '404': 0, '405': 0, '500': 0}
+
+# Initialize variables
+total_file_size = 0
+line_count = 0
+
+
+try:
+    # Iterate over lines from standard input
+    for line in stdin:
+        # Split the line into words
+        line_args = line.split()
+
+        if len(line_args) > 2:
+            # Extract HTTP status code and file size
+            status_code = line_args[-2]
+            file_size = int(line_args[-1])
+
+            # Update counts in the dictionary
+            if status_code in http_status_counts:
+                http_status_counts[status_code] += 1
+
+            # Update total file size and line count
+            total_file_size += file_size
+            line_count += 1
+
+            # Print summary every 10 lines
+            if line_count == 10:
+                print_summary(total_file_size, http_status_counts)
+                line_count = 0
+
+except KeyboardInterrupt:
+    pass
+
+finally:
+    # Print final summary
+    print_summary(total_file_size, http_status_counts)
