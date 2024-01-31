@@ -1,82 +1,60 @@
 #!/usr/bin/python3
-""" Script that reads stdin line by line and computes metrics
-
-    Input format:
-        <IP Address> - [<date>] "GET /projects/260 HTTP/1.1"
-            <status code> <file size>
-        (if the format is not this one, the line must be skipped)
-
-    format: <status code>: <number>
-"""
-import sys
-import re
+'''
+Module Docs
+'''
+from sys import stdin
 
 
-def print_status(total_size, status_codes):
-    """ Print Status Function """
-    print(f"File size: {total_size}")
-    for code, count in status_codes.items():
-        if count > 0:
-            print(f"{code}: {count}")
+def print_summary(total_file_size, status_counts):
+    """
+    Print the total file size and counts of HTTP status codes.
+
+    :param total_file_size: Total file size accumulated so far.
+    :param status_counts: Dictionary containing counts of different HTTP status
+    codes.
+    """
+    print("File size: {:d}".format(total_file_size))
+    for code, count in sorted(status_counts.items()):
+        if count != 0:
+            print("{}: {}".format(code, count))
 
 
-def match_input(input_line):
-    """ Check if input line match """
-    data = {'status_code': 0, 'file_size': 0}
+# Dictionary to store counts of different HTTP status codes
+http_status_counts = {'200': 0, '301': 0, '400': 0, '401': 0,
+                      '403': 0, '404': 0, '405': 0, '500': 0}
 
-    pattern = re.compile(r'\b^[0-9]+.[0-9]+.[0-9]+.[0-9]+ - '
-                         r'\[[0-9]+-[0-9]+-[0-9]+ '
-                         r'[0-9]+:[0-9]+:[0-9]+.[0-9]+\] '
-                         r'"GET \/projects\/260 HTTP\/1.1" '
-                         r'(200|301|400|401|403|404|405|500) ([0-9]+)$\b')
-
-    match = pattern.search(input_line)
-    if not match:
-        return (None)
-
-    data['status_code'] = int(match.group(1))
-    data['file_size'] = int(match.group(2))
-    return (data)
+# Initialize variables
+total_file_size = 0
+line_count = 0
 
 
-def main():
-    """ Main Function """
-    total_size = 0
-    status_codes = {
-                200: 0,
-                301: 0,
-                400: 0,
-                401: 0,
-                403: 0,
-                404: 0,
-                405: 0,
-                500: 0
-            }
-    counter = 0
+try:
+    # Iterate over lines from standard input
+    for line in stdin:
+        # Split the line into words
+        line_args = line.split()
 
-    try:
-        for line in sys.stdin:
-            data = match_input(line)
-            counter += 1
+        if len(line_args) > 2:
+            # Extract HTTP status code and file size
+            status_code = line_args[-2]
+            file_size = int(line_args[-1])
 
-            if not data:
-                continue
+            # Update counts in the dictionary
+            if status_code in http_status_counts:
+                http_status_counts[status_code] += 1
 
-            total_size += data['file_size']
-            status_code = data['status_code']
+            # Update total file size and line count
+            total_file_size += file_size
+            line_count += 1
 
-            if not status_codes.get(status_code, None):
-                status_codes[status_code] = 1
-            else:
-                status_codes[status_code] += 1
+            # Print summary every 10 lines
+            if line_count == 10:
+                print_summary(total_file_size, http_status_counts)
+                line_count = 0
 
-            if counter % 10 == 0:
-                print_status(total_size, status_codes)
-        print_status(total_size, status_codes)
-    except KeyboardInterrupt:
-        print_status(total_size, status_codes)
-        raise
+except KeyboardInterrupt:
+    pass
 
-
-if __name__ == "__main__":
-    main()
+finally:
+    # Print final summary
+    print_summary(total_file_size, http_status_counts)
