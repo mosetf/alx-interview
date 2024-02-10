@@ -27,4 +27,18 @@ def isSafe(board, row, col):
     return True
 
 
+def solveNQUtil(board, col):
+    """Solves the N queen problem using backtracking"""
+    if col == len(board):
+        printSolution(board)
+        return True
+    res = False
+    for i in range(len(board)):
+        if isSafe(board, i, col):
+            board[i][col] = 1
+            res = solveNQUtil(board, col + 1) or res
+            board[i][col] = 0
+    return res
+
+
 
