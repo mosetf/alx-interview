@@ -41,4 +41,16 @@ def solveNQUtil(board, col):
     return res
 
 
+def solveNQ(n):
+    """Solves the N queen problem"""
+    if n < 4:
+        print("N must be at least 4")
+        return
+    board = [[0 for i in range(n)] for j in range(n)]
+    if solveNQUtil(board, 0) is False:
+        print("Solution does not exist")
+        return
+    return
 
+
+i
