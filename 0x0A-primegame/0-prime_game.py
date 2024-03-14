@@ -54,10 +54,12 @@ def isWinner(x, nums):
 
     Args:
         x (int): The number of rounds to be played.
-        nums (list): A list of integers representing the values of n for each round.
+        nums (list): A list of integers representing
+        the values of n for each round.
 
     Returns:
-        str or None: The name of the winner ('Maria' or 'Ben') or None if it's a tie.
+        str or None: The name of the winner ('Maria' or 'Ben')
+        or None if it's a tie.
 
     Notes:
         - The function assumes that Maria always goes first.
